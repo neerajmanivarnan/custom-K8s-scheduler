@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bestfit-pod
+spec:
+  schedulerName: custom-scheduler  # Ensure it's scheduled by your custom scheduler
+  containers:
+    - name: bestfit-container
+      image: nginx
+      resources:
+        requests:
+          cpu: "500m"      # 0.5 CPU cores
+          memory: "512Mi"  # 512 MiB RAM
+        limits:
+          cpu: "500m"      # Exactly 0.5 CPU cores
+          memory: "512Mi"  # Exactly 512 MiB RAM
