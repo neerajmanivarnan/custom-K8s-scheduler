@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: custom-scheduler-rolebinding
+  namespace: kube-system
+subjects:
+- kind: ServiceAccount
+  name: custom-scheduler-sa
+  namespace: kube-system
+roleRef:
+  kind: Role
+  name: custom-scheduler-role
+  apiGroup: rbac.authorization.k8s.io
