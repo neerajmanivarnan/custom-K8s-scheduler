@@ -19,6 +19,7 @@ public class KubernetesRepository {
     }
 
     public List<PodInfo> getUnscheduledPods() {
+
         return client.pods().list().getItems().stream()
                 .filter(pod -> pod.getSpec().getNodeName() == null)
                 .map(pod -> {
@@ -30,9 +31,11 @@ public class KubernetesRepository {
                     return podInfo;
                 })
                 .collect(Collectors.toList());
+
     }
 
     public List<NodeInfo> getAvailableNodes() {
+
         return client.nodes().list().getItems().stream()
                 .map(node -> {
                     NodeInfo nodeInfo = new NodeInfo();
@@ -41,13 +44,16 @@ public class KubernetesRepository {
                     return nodeInfo;
                 })
                 .collect(Collectors.toList());
+
     }
 
     public void assignPodToNode(String podName, String namespace, String nodeName) {
+
         client.pods().inNamespace(namespace).withName(podName)
                 .edit(pod -> {
                     pod.getSpec().setNodeName(nodeName);
                     return pod;
                 });
+
     }
 }

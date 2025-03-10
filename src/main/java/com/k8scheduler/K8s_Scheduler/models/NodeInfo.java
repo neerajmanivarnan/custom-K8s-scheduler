@@ -6,9 +6,11 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class NodeInfo {
+
     public NodeInfo() {
-        //TODO Auto-generated constructor stub
+        //empty
     }
+
     private String name;
     private double cpuCapacity;
     private double memoryCapacity;
