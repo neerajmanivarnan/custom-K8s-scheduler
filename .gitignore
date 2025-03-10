@@ -31,3 +31,4 @@ build/
 ./manifests/scheduler_RBAC.yaml
 ### VS Code ###
 .vscode/
+./startup_script.sh

@@ -7,9 +7,11 @@ import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 
 @Configuration
 public class SchedulerConfig {
+
     @SuppressWarnings("deprecation")
     @Bean
     public KubernetesClient kubernetesClient() {
         return new DefaultKubernetesClient();
     }
+
 }
