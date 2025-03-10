@@ -16,7 +16,7 @@ spec:
       serviceAccountName: custom-scheduler-sa
       containers:
       - name: custom-scheduler
-        image: neergasm/custom-scheduler:0.4  # Update the tag after rebuilding
+        image: neergasm/custom-scheduler:0.3  # Update the tag after rebuilding
         securityContext:
           runAsUser: 1001  # Matches the user in Dockerfile
           runAsNonRoot: true
