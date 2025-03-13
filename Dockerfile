@@ -5,14 +5,14 @@ WORKDIR /usr/src/project
 
 RUN mvn clean package 
 
-RUN jar xf target/K8s-Scheduler-0.0.1-SNAPSHOT.jar
+RUN jar xf target/custom-0.0.1-SNAPSHOT.jar
 
 RUN jdeps --ignore-missing-deps -q  \
     --recursive  \
     --multi-release 17  \
     --print-module-deps  \
     --class-path 'BOOT-INF/lib/*'  \
-    target/K8s-Scheduler-0.0.1-SNAPSHOT.jar > deps.info
+    target/custom-0.0.1-SNAPSHOT.jar > deps.info
 RUN jlink \
     --add-modules $(cat deps.info) \
     --strip-debug \
@@ -26,11 +26,11 @@ ENV JAVA_HOME /user/java/jdk17
 ENV PATH $JAVA_HOME/bin:$PATH
 COPY --from=build /myjre $JAVA_HOME
 RUN mkdir /project
-COPY --from=build /usr/src/project/target/K8s-Scheduler-0.0.1-SNAPSHOT.jar /project/
+COPY --from=build /usr/src/project/target/custom-0.0.1-SNAPSHOT.jar /project/
 USER 1001
 WORKDIR /project
 EXPOSE 8082
-ENTRYPOINT java -jar K8s-Scheduler-0.0.1-SNAPSHOT.jar
+ENTRYPOINT java -jar custom-0.0.1-SNAPSHOT.jar
 
 # FROM eclipse-temurin:17-jdk-alpine
 # WORKDIR /app
