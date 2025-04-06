@@ -3,15 +3,15 @@ kind: StatefulSet
 metadata:
   name: postgres
 spec:
-  serviceName: "postgres"
+  serviceName: "postgres-pod"
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: postgres-pod
   template:
     metadata:
       labels:
-        app: postgres
+        app: postgres-pod
     spec:
       containers:
       - name: postgres
@@ -31,7 +31,7 @@ spec:
           mountPath: /var/lib/postgresql/data
   volumeClaimTemplates:
   - metadata:
-      name: postgres-storage
+      name: postgres-pvc
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:

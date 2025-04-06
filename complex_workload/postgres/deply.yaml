@@ -1,0 +1,72 @@
+# PersistentVolumeClaim for PostgreSQL storage
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: standard
+
+---
+# Service to expose Flask app
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-service
+  namespace: default
+spec:
+  selector:
+    app: combined-app
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  type: LoadBalancer
+
+---
+# Deployment with Flask and PostgreSQL
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: combined-app
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: combined-app
+  template:
+    metadata:
+      labels:
+        app: combined-app
+    spec:
+      containers:
+      # Flask container
+      - name: flask
+        image: flask-postgres-app:latest
+        ports:
+        - containerPort: 5000
+      # PostgreSQL container
+      - name: postgres
+        image: postgres:latest
+        env:
+        - name: POSTGRES_DB
+          value: mydatabase
+        - name: POSTGRES_USER
+          value: myuser
+        - name: POSTGRES_PASSWORD
+          value: mypassword
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: postgres-storage
+        persistentVolumeClaim:
+          claimName: postgres-pvc

@@ -1,0 +1,60 @@
+# PersistentVolumeClaim for PostgreSQL storage
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: standard
+
+---
+# Service to expose PostgreSQL
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: default
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+    protocol: TCP
+  selector:
+    app: postgres
+  clusterIP: None  # Headless service for direct pod access
+
+---
+# Pod for PostgreSQL with custom scheduler
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgres
+  namespace: default
+  labels:
+    app: postgres
+spec:
+  schedulerName: custom-scheduler  # Use your custom scheduler
+  containers:
+  - name: postgres
+    image: postgres:latest
+    env:
+    - name: POSTGRES_DB
+      value: mydatabase
+    - name: POSTGRES_USER
+      value: myuser
+    - name: POSTGRES_PASSWORD
+      value: mypassword
+    ports:
+    - containerPort: 5432
+    volumeMounts:
+    - name: postgres-storage
+      mountPath: /var/lib/postgresql/data
+  volumes:
+  - name: postgres-storage
+    persistentVolumeClaim:
+      claimName: postgres-pvc
